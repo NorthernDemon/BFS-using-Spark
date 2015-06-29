@@ -26,7 +26,7 @@ public final class HelloSpark {
 
     private static final String IP = "192.168.1.216";
     private static final String PORT = "7077";
-    private static final String JAR = "test-1.0-SNAPSHOT";
+    private static final String JAR = "BFS-with-MapReduce-1.0-SNAPSHOT-jar-with-dependencies";
 
     public static void main(String[] args) throws Exception {
         SparkConf sparkConf = new SparkConf()
