@@ -19,11 +19,12 @@ Requirements: *JDK 7*, *Maven*
 
 Configure service parameters in **service.properties** file.
 
-####Run inside of IDE
+Add the libraries from **sequential-lib** folder to your classpath.
+
+####Run with Spark
     - mvn clean install
+    - start the master node by using the following command
+      > spark-class org.apache.spark.deploy.master.Master
+    - start the slave nodes using the following command
+      > spark-class org.apache.spark.deploy.worker.Worker spark://{masterIp}:7077
     - run main BFS-with-MapReduce.java
-    
-####Run as executable JAR
-    - mvn clean install
-    - execute following line in new window to start the server:
-        - java -jar BFS-with-MapReduce.jar
