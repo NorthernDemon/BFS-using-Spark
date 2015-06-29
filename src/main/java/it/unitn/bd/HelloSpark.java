@@ -24,14 +24,15 @@ public final class HelloSpark {
 
     private static final Pattern SPACE = Pattern.compile(" ");
 
-    private static final String IP = "192.168.1.216";
-    private static final String PORT = "7077";
-    private static final String JAR = "BFS-with-MapReduce-1.0-SNAPSHOT-jar-with-dependencies";
+    private static final String APP_NAME = ServiceConfiguration.getAppName();
+    private static final String IP = ServiceConfiguration.getIp();
+    private static final int PORT = ServiceConfiguration.getPort();
+    private static final String JAR = ServiceConfiguration.getJar();
 
     public static void main(String[] args) throws Exception {
         SparkConf sparkConf = new SparkConf()
-                .setAppName("JavaWordCount")
-                .setMaster("spark://" + IP + ":" + PORT);
+                .setAppName(APP_NAME)
+                .setMaster("spark://" + IP + ':' + PORT);
         JavaSparkContext ctx = new JavaSparkContext(sparkConf);
         ctx.addJar("target/" + JAR + ".jar");
         JavaRDD<String> lines = ctx.textFile("README.md", 1);
