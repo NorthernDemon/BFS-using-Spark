@@ -4,7 +4,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -24,6 +23,8 @@ public abstract class ServiceConfiguration {
 
     private static String jar;
 
+    private static String problemFile;
+
     static {
         try {
             Properties properties = new Properties();
@@ -32,7 +33,8 @@ public abstract class ServiceConfiguration {
             ip = properties.getProperty("ip");
             port = Integer.parseInt(properties.getProperty("port"));
             jar = properties.getProperty("jar");
-        } catch (IOException e) {
+            problemFile = properties.getProperty("problemFile");
+        } catch (Exception e) {
             logger.error("Failed to load service configuration!", e);
         }
     }
@@ -51,5 +53,9 @@ public abstract class ServiceConfiguration {
 
     public static String getJar() {
         return jar;
+    }
+
+    public static String getProblemFile() {
+        return problemFile;
     }
 }

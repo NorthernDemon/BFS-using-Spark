@@ -28,14 +28,20 @@ public final class HelloSpark {
     private static final String IP = ServiceConfiguration.getIp();
     private static final int PORT = ServiceConfiguration.getPort();
     private static final String JAR = ServiceConfiguration.getJar();
+    private static final String PROBLEM_FILE = ServiceConfiguration.getProblemFile();
 
     public static void main(String[] args) throws Exception {
+        String master = "spark://" + IP + ':' + PORT;
+        logger.info("Application name: " + APP_NAME);
+        logger.info("Problem file path: " + PROBLEM_FILE);
+        logger.info("Using JAR file: " + JAR);
+        logger.info("Connecting to: " + master);
         SparkConf sparkConf = new SparkConf()
                 .setAppName(APP_NAME)
-                .setMaster("spark://" + IP + ':' + PORT);
+                .setMaster(master);
         JavaSparkContext ctx = new JavaSparkContext(sparkConf);
         ctx.addJar("target/" + JAR + ".jar");
-        JavaRDD<String> lines = ctx.textFile("README.md", 1);
+        JavaRDD<String> lines = ctx.textFile(PROBLEM_FILE, 1);
 
         JavaRDD<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
             public Iterable<String> call(String s) {

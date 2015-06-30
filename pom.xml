@@ -11,8 +11,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <service.properties>service.properties</service.properties>
+        <test-sets.properties>test-sets</test-sets.properties>
         <jdk.version>1.7</jdk.version>
         <maven-compiler-plugin.version>3.3</maven-compiler-plugin.version>
+        <maven-antrun-plugin.version>1.8</maven-antrun-plugin.version>
         <maven-assembly-plugin.version>2.5.5</maven-assembly-plugin.version>
         <spark.version>1.4.0</spark.version>
         <scala.version>2.11.7</scala.version>
@@ -29,6 +32,30 @@
                     <source>${jdk.version}</source>
                     <target>${jdk.version}</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>${maven-antrun-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo>Copying service configuration file</echo>
+                                <copy file="${service.properties}"
+                                      tofile="${project.basedir}/target/${service.properties}" overwrite="true"/>
+                                <echo>Copying test-sets folder</echo>
+                                <copy todir="${project.basedir}/target/${test-sets.properties}" overwrite="true">
+                                    <fileset dir="${test-sets.properties}"/>
+                                </copy>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
