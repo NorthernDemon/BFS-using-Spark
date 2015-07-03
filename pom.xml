@@ -19,6 +19,7 @@
         <maven-assembly-plugin.version>2.5.5</maven-assembly-plugin.version>
         <spark.version>1.4.0</spark.version>
         <scala.version>2.11.7</scala.version>
+        <guava.version>18.0</guava.version>
         <log4j.version>2.3</log4j.version>
     </properties>
 
@@ -97,6 +98,11 @@
             <version>${scala.version}</version>
         </dependency>
         <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
             <version>${log4j.version}</version>
@@ -105,6 +111,23 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>${log4j.version}</version>
+        </dependency>
+
+        <!-- Sequential Libs -->
+        <!-- Produces Maven Warning, has to be done manually since they are not available on maven repo -->
+        <dependency>
+            <groupId>sequential</groupId>
+            <artifactId>algs4</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/sequential-libs/algs4.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>sequential</groupId>
+            <artifactId>stdlib</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/sequential-libs/stdlib.jar</systemPath>
         </dependency>
     </dependencies>
 
