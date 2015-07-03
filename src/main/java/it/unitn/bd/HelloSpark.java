@@ -28,7 +28,7 @@ public final class HelloSpark {
     private static final String IP = ServiceConfiguration.getIp();
     private static final int PORT = ServiceConfiguration.getPort();
     private static final String JAR = ServiceConfiguration.getJar();
-    private static final String PROBLEM_FILE = ServiceConfiguration.getProblemFile();
+    private static final String PROBLEM_FILE = ServiceConfiguration.getProblemFiles();
 
     public static void main(String[] args) throws Exception {
         String master = "spark://" + IP + ':' + PORT;

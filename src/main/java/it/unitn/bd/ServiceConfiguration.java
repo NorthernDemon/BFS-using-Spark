@@ -1,9 +1,11 @@
 package it.unitn.bd;
 
+import com.google.common.base.Splitter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.FileInputStream;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -23,7 +25,7 @@ public abstract class ServiceConfiguration {
 
     private static String jar;
 
-    private static String problemFile;
+    private static List<String> problemFiles;
 
     static {
         try {
@@ -33,7 +35,7 @@ public abstract class ServiceConfiguration {
             ip = properties.getProperty("ip");
             port = Integer.parseInt(properties.getProperty("port"));
             jar = properties.getProperty("jar");
-            problemFile = properties.getProperty("problemFile");
+            problemFiles = Splitter.on(",").splitToList(properties.getProperty("problemFiles"));
         } catch (Exception e) {
             logger.error("Failed to load service configuration!", e);
         }
@@ -55,7 +57,7 @@ public abstract class ServiceConfiguration {
         return jar;
     }
 
-    public static String getProblemFile() {
-        return problemFile;
+    public static List<String> getProblemFiles() {
+        return problemFiles;
     }
 }
