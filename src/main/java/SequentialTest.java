@@ -31,19 +31,21 @@ public final class SequentialTest {
             In in = new In(problemFile);
             Graph G = new Graph(in);
             BreadthFirstPaths bfs = new BreadthFirstPaths(G, SOURCE_VERTEX);
-            for (int v = 0; v < G.V(); v++) {
-                if (bfs.hasPathTo(v)) {
-                    if (DEBUG) StdOut.printf("%d to %d (%d):  ", SOURCE_VERTEX, v, bfs.distTo(v));
-                    for (int x : bfs.pathTo(v)) {
-                        if (x == SOURCE_VERTEX) {
-                            if (DEBUG) StdOut.print(x);
-                        } else {
-                            if (DEBUG) StdOut.print("-" + x);
+            if (DEBUG) {
+                for (int v = 0; v < G.V(); v++) {
+                    if (bfs.hasPathTo(v)) {
+                        StdOut.printf("%d to %d (%d):  ", SOURCE_VERTEX, v, bfs.distTo(v));
+                        for (int x : bfs.pathTo(v)) {
+                            if (x == SOURCE_VERTEX) {
+                                StdOut.print(x);
+                            } else {
+                                StdOut.print("-" + x);
+                            }
                         }
+                        StdOut.println();
+                    } else {
+                        StdOut.printf("%d to %d (-):  not connected\n", SOURCE_VERTEX, v);
                     }
-                    if (DEBUG) StdOut.println();
-                } else {
-                    if (DEBUG) StdOut.printf("%d to %d (-):  not connected\n", SOURCE_VERTEX, v);
                 }
             }
             System.out.println("Elapsed time ==> " + stopwatch);
