@@ -29,7 +29,7 @@ public final class SequentialTest {
             Graph G = new Graph(new In(problemFile));
             stopwatch.start();
             BreadthFirstPaths bfs = new BreadthFirstPaths(G, SOURCE_VERTEX);
-            System.out.println("Elapsed time ==> " + stopwatch);
+            StdOut.println("Elapsed time ==> " + stopwatch);
             stopwatch.reset();
             if (DEBUG) {
                 for (int v = 0; v < G.V(); v++) {

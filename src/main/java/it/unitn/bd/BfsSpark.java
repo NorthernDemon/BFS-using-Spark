@@ -1,5 +1,7 @@
 package it.unitn.bd;
 
+import com.google.common.base.Splitter;
+import com.google.common.base.Stopwatch;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;
@@ -11,18 +13,16 @@ import org.apache.spark.api.java.function.Function2;
 import org.apache.spark.api.java.function.PairFunction;
 import scala.Tuple2;
 
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 /**
  * Hello Spark Example
  */
-public final class HelloSpark {
+public final class BfsSpark {
 
     private static final Logger logger = LogManager.getLogger();
 
-    private static final Pattern SPACE = Pattern.compile(" ");
+    private static final Splitter SPACE = Splitter.on(" ");
 
     private static final String APP_NAME = ServiceConfiguration.getAppName();
     private static final String IP = ServiceConfiguration.getIp();
@@ -41,29 +41,38 @@ public final class HelloSpark {
                 .setMaster(master);
         JavaSparkContext ctx = new JavaSparkContext(sparkConf);
         ctx.addJar("target/" + JAR + ".jar");
-        JavaRDD<String> lines = ctx.textFile(PROBLEM_FILE.iterator().next(), 1);
+        Stopwatch stopwatch = Stopwatch.createUnstarted();
+        for (String problemFile : ServiceConfiguration.getProblemFiles()) {
+            logger.info("Problem file: " + problemFile);
 
-        JavaRDD<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
-            public Iterable<String> call(String s) {
-                return Arrays.asList(SPACE.split(s));
+            JavaRDD<String> lines = ctx.textFile(problemFile, 1);
+
+            stopwatch.start();
+
+            JavaRDD<String> words = lines.flatMap(new FlatMapFunction<String, String>() {
+                public Iterable<String> call(String s) {
+                    return SPACE.splitToList(s);
+                }
+            });
+
+            JavaPairRDD<String, Integer> ones = words.mapToPair(new PairFunction<String, String, Integer>() {
+                public Tuple2<String, Integer> call(String s) {
+                    return new Tuple2<>(s, 1);
+                }
+            });
+
+            JavaPairRDD<String, Integer> counts = ones.reduceByKey(new Function2<Integer, Integer, Integer>() {
+                public Integer call(Integer i1, Integer i2) {
+                    return i1 + i2;
+                }
+            });
+
+            for (Tuple2<?, ?> tuple : counts.collect()) {
+                logger.info(tuple._1() + ": " + tuple._2());
             }
-        });
 
-        JavaPairRDD<String, Integer> ones = words.mapToPair(new PairFunction<String, String, Integer>() {
-            public Tuple2<String, Integer> call(String s) {
-                return new Tuple2<>(s, 1);
-            }
-        });
-
-        JavaPairRDD<String, Integer> counts = ones.reduceByKey(new Function2<Integer, Integer, Integer>() {
-            public Integer call(Integer i1, Integer i2) {
-                return i1 + i2;
-            }
-        });
-
-        List<Tuple2<String, Integer>> output = counts.collect();
-        for (Tuple2<?, ?> tuple : output) {
-            logger.info(tuple._1() + ": " + tuple._2());
+            logger.info("Elapsed time ==> " + stopwatch);
+            stopwatch.reset();
         }
         ctx.stop();
     }
