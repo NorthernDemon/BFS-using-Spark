@@ -11,16 +11,17 @@ Introduction
 
 TEXT
 
-####Features
-    - feature
-
 Installation
 -------
 Requirements: *JDK 7*, *Maven*
 
 Configure service parameters in **service.properties** file.
 
+####Run with IDE
+
 Add the libraries from **sequential-libs** folder to your classpath.
+
+Follow the **Run with Spark** section.
 
 ####Run with Spark
 
