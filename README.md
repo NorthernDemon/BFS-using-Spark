@@ -34,4 +34,4 @@ Start the slave nodes using the following command
 > spark-class org.apache.spark.deploy.worker.Worker spark://{masterIp}:7077
 
 Submit Spark application from the JAR folder
-> spark-submit BFS-withMapReduce-${version}-jar-with-dependencies.jar
+> spark-submit BFS-wit-hMapReduce-${version}-jar-with-dependencies.jar

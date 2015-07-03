@@ -33,7 +33,7 @@ public final class HelloSpark {
     public static void main(String[] args) throws Exception {
         String master = "spark://" + IP + ':' + PORT;
         logger.info("Application name: " + APP_NAME);
-        logger.info("Problem file path: " + PROBLEM_FILE);
+        logger.info("Problem files path: " + PROBLEM_FILE);
         logger.info("Using JAR file: " + JAR);
         logger.info("Connecting to: " + master);
         SparkConf sparkConf = new SparkConf()
