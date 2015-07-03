@@ -1,6 +1,11 @@
 Breadth-first search with MapReduce
 ==============
 
+Acknowledgment
+-------
+
+Sequential version of the BFS algorithm and data sets are taken from the book [Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne](http://algs4.cs.princeton.edu/home/)
+
 Introduction
 -------
 
@@ -15,7 +20,7 @@ Requirements: *JDK 7*, *Maven*
 
 Configure service parameters in **service.properties** file.
 
-Add the libraries from **sequential-lib** folder to your classpath.
+Add the libraries from **sequential-libs** folder to your classpath.
 
 ####Run with Spark
 
