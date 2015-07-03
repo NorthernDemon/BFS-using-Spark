@@ -9,5 +9,9 @@
         <Logger name="it.unitn.bd" level="trace" additivity="false">
             <AppenderRef ref="Console"/>
         </Logger>
+        <!-- Added for sequential libs -->
+        <Logger name="" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
     </Loggers>
 </Configuration>

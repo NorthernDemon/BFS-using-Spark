@@ -1,5 +1,7 @@
 import com.google.common.base.Stopwatch;
 import it.unitn.bd.ServiceConfiguration;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * Sequential BFS test from the book "Algorithms", 4th Edition by Robert Sedgewick and Kevin Wayne
@@ -8,13 +10,7 @@ import it.unitn.bd.ServiceConfiguration;
  */
 public final class SequentialTest {
 
-    /**
-     * Because of external libs have to use manual logger level instead of log4j2
-     * <p/>
-     * true - output all logs, including actual path solution
-     * false - output reduced logs, including speed test
-     */
-    private final static boolean DEBUG = false;
+    private static final Logger logger = LogManager.getLogger();
 
     /**
      * Defines the starting point for BFS algorithm
@@ -22,33 +18,23 @@ public final class SequentialTest {
     private final static int SOURCE_VERTEX = 0;
 
     public static void main(String[] args) throws Exception {
-        StdOut.println("Sequential BFS is started...");
+        logger.info("Sequential BFS is started...");
         Stopwatch stopwatch = Stopwatch.createUnstarted();
         for (String problemFile : ServiceConfiguration.getProblemFiles()) {
-            StdOut.println("Problem file: " + problemFile);
+            logger.info("Problem file: " + problemFile);
             Graph G = new Graph(new In(problemFile));
             stopwatch.start();
             BreadthFirstPaths bfs = new BreadthFirstPaths(G, SOURCE_VERTEX);
-            StdOut.println("Elapsed time ==> " + stopwatch);
+            logger.info("Elapsed time ==> " + stopwatch);
             stopwatch.reset();
-            if (DEBUG) {
-                for (int v = 0; v < G.V(); v++) {
-                    if (bfs.hasPathTo(v)) {
-                        StdOut.printf("%d to %d (%d):  ", SOURCE_VERTEX, v, bfs.distTo(v));
-                        for (int x : bfs.pathTo(v)) {
-                            if (x == SOURCE_VERTEX) {
-                                StdOut.print(x);
-                            } else {
-                                StdOut.print("-" + x);
-                            }
-                        }
-                        StdOut.println();
-                    } else {
-                        StdOut.printf("%d to %d (-):  not connected\n", SOURCE_VERTEX, v);
-                    }
+            for (int v = 0; v < G.V(); v++) {
+                if (bfs.hasPathTo(v)) {
+                    logger.debug(SOURCE_VERTEX + " to " + v + " (distance " + bfs.distTo(v) + "): " + bfs.pathTo(v));
+                } else {
+                    logger.debug(SOURCE_VERTEX + " to " + v + " (not connected)");
                 }
             }
         }
-        StdOut.println("Sequential BFS is stopped.");
+        logger.info("Sequential BFS is stopped.");
     }
 }
