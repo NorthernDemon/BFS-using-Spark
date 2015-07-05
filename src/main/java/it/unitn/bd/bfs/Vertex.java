@@ -5,56 +5,64 @@ import com.google.common.base.Splitter;
 import java.io.Serializable;
 import java.util.*;
 
+/**
+ * Vertex used for MapReduce processing and passing from map to reduce functions
+ * <p/>
+ * Also can be stored in the text format for intermediate iterations:
+ * <p/>
+ * | ID |  Neighbours  | Distance | Color |
+ * -----------------------------------------
+ * |  4 |    [3, 5, 6] |     2    | BLACK |
+ * |  6 |       [1, 4] |     1    | BLACK |
+ * |  2 |       [1, 3] |     1    | BLACK |
+ * |  1 |    [6, 2, 3] |     0    | BLACK |
+ * |  3 | [1, 2, 4, 5] |     1    | BLACK |
+ * |  5 |       [3, 4] |     2    | BLACK |
+ *
+ * @see Color
+ */
 public final class Vertex implements Serializable {
 
-    private static final Splitter EQUAL = Splitter.on("=");
-
-    private static final Splitter BAR = Splitter.on("|");
+    private static final String BAR_SEPARATOR = "|";
+    private static final Splitter BAR = Splitter.on(BAR_SEPARATOR);
+    private static final Splitter COMMA = Splitter.on(",");
 
     private final int id;
 
-    private Set<Integer> edges;
+    private Set<Integer> neighbours;
 
     private int distance;
 
     private Color color;
 
-    public Vertex(int id, Set<Integer> edges, int distance, Color color) {
+    public Vertex(int id, Set<Integer> neighbours, int distance, Color color) {
         this.id = id;
-        this.edges = edges;
+        this.neighbours = new HashSet<>(neighbours);
         this.distance = distance;
         this.color = color;
     }
 
     public Vertex(String source) {
-        List<String> graph = EQUAL.splitToList(source);
-        id = Integer.parseInt(graph.get(0));
-        List<String> tokens = BAR.splitToList(graph.get(1));
-        String edgeArray = tokens.get(0);
-        edgeArray = edgeArray.substring(1, edgeArray.length() - 1);
-        String[] edgeVertexes = edgeArray.split(",");
-        edges = new HashSet<>(edgeVertexes.length);
-        for (String edgeVertex : edgeVertexes) {
-            try {
-                edges.add(Integer.parseInt(edgeVertex.trim()));
-            } catch (NumberFormatException e) {
-                // It's OK
-            }
+        List<String> tokens = BAR.splitToList(source);
+        id = Integer.parseInt(tokens.get(0));
+        neighbours = new HashSet<>(tokens.get(1).length());
+        for (String vertex : COMMA.splitToList(tokens.get(1).substring(1, tokens.get(1).length() - 1))) {
+            neighbours.add(Integer.parseInt(vertex.trim()));
         }
-        distance = tokens.get(1).equals("Integer.MAX_VALUE") ? Integer.MAX_VALUE : Integer.parseInt(tokens.get(1));
-        color = Color.valueOf(tokens.get(2));
+        distance = Integer.parseInt(tokens.get(2));
+        color = Color.valueOf(tokens.get(3));
     }
 
     public int getId() {
         return id;
     }
 
-    public Set<Integer> getEdges() {
-        return Collections.unmodifiableSet(edges);
+    public Set<Integer> getNeighbours() {
+        return Collections.unmodifiableSet(neighbours);
     }
 
-    public void addEdge(int edge) {
-        edges.add(edge);
+    public void addNeighbour(int neighbour) {
+        neighbours.add(neighbour);
     }
 
     public int getDistance() {
@@ -78,7 +86,7 @@ public final class Vertex implements Serializable {
             Vertex object = (Vertex) o;
 
             return Objects.equals(id, object.id) &&
-                    Objects.equals(edges, object.edges) &&
+                    Objects.equals(neighbours, object.neighbours) &&
                     Objects.equals(distance, object.distance) &&
                     Objects.equals(color, object.color);
         }
@@ -88,11 +96,11 @@ public final class Vertex implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, edges, distance, color);
+        return Objects.hash(id, neighbours, distance, color);
     }
 
     @Override
     public String toString() {
-        return id + "=" + edges + "|" + (distance < Integer.MAX_VALUE ? distance : "Integer.MAX_VALUE") + "|" + color.toString();
+        return id + BAR_SEPARATOR + neighbours + BAR_SEPARATOR + distance + BAR_SEPARATOR + color;
     }
 }
