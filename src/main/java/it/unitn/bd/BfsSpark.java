@@ -59,19 +59,17 @@ public final class BfsSpark {
 
                 JavaRDD<String> lines = ctx.textFile(problemFile + "_" + (i - 1));
 
-                JavaPairRDD<Integer, String> mapper = lines.flatMapToPair(new PairFlatMapFunction<String, Integer, String>() {
+                JavaPairRDD<Integer, Vertex> mapper = lines.flatMapToPair(new PairFlatMapFunction<String, Integer, Vertex>() {
                     @Override
-                    public Iterable<Tuple2<Integer, String>> call(String value) throws Exception {
-                        List<Tuple2<Integer, String>> result = new ArrayList<>();
+                    public Iterable<Tuple2<Integer, Vertex>> call(String source) throws Exception {
+                        List<Tuple2<Integer, Vertex>> result = new ArrayList<>();
 
                         // For each GRAY vertex, emit each of the edges as a new vertex (also GRAY)
-                        Vertex vertex = new Vertex(value);
+                        Vertex vertex = new Vertex(source);
                         if (vertex.getColor() == Color.GRAY) {
                             for (int v : vertex.getEdges()) {
-                                Vertex vVertex = new Vertex(v);
-                                vVertex.setDistance(vertex.getDistance() + 1);
-                                vVertex.setColor(Color.GRAY);
-                                result.add(new Tuple2<>(vVertex.getId(), vVertex.toString()));
+                                Vertex vVertex = new Vertex(v, vertex.getDistance() + 1, Color.GRAY);
+                                result.add(new Tuple2<>(vVertex.getId(), vVertex));
                             }
                             // We're done with this vertex now, color it BLACK
                             vertex.setColor(Color.BLACK);
@@ -79,42 +77,40 @@ public final class BfsSpark {
 
                         // No matter what, we emit the input vertex
                         // If the vertex came into this method GRAY, it will be output as BLACK
-                        result.add(new Tuple2<>(vertex.getId(), vertex.toString()));
+                        result.add(new Tuple2<>(vertex.getId(), vertex));
                         return result;
                     }
                 });
 
-                JavaPairRDD<Integer, String> reducer = mapper.reduceByKey(new Function2<String, String, String>() {
-                    public String call(String value1, String value2) {
-                        Set<Integer> edges = null;
+                JavaPairRDD<Integer, Vertex> reducer = mapper.reduceByKey(new Function2<Vertex, Vertex, Vertex>() {
+                    public Vertex call(Vertex vertex1, Vertex vertex2) {
+                        Set<Integer> edges = new HashSet<>();
                         int distance = Integer.MAX_VALUE;
                         Color color = Color.WHITE;
 
-                        for (String value : Arrays.asList(value1, value2)) {
-                            Vertex u = new Vertex(value);
-
+                        for (Vertex vertex : Arrays.asList(vertex1, vertex2)) {
                             // One (and only one) copy of the vertex will be the fully expanded
                             // version, which includes the edges
-                            if (u.getEdges().size() > 0) {
-                                edges = u.getEdges();
+                            if (vertex.getEdges().size() > 0) {
+                                edges = vertex.getEdges();
                             }
 
                             // Save the minimum distance
-                            if (u.getDistance() < distance) {
-                                distance = u.getDistance();
+                            if (vertex.getDistance() < distance) {
+                                distance = vertex.getDistance();
                             }
 
                             // Save the darkest color
-                            if (u.getColor().ordinal() > color.ordinal()) {
-                                color = u.getColor();
+                            if (vertex.getColor().ordinal() > color.ordinal()) {
+                                color = vertex.getColor();
                             }
                         }
 
-                        Vertex n = new Vertex(value1);
-                        n.setDistance(distance);
-                        n.setEdges(edges);
-                        n.setColor(color);
-                        return n.toString();
+                        Vertex vertex = new Vertex(vertex1.getId());
+                        vertex.setDistance(distance);
+                        vertex.setEdges(edges);
+                        vertex.setColor(color);
+                        return vertex;
                     }
                 });
 
@@ -124,9 +120,7 @@ public final class BfsSpark {
                     logger.info(tuple._1() + ": " + tuple._2());
                     content += tuple._2() + "\n";
                 }
-
-                String path = problemFile + "_" + i;
-                Files.write(Paths.get(path), content.getBytes(), StandardOpenOption.CREATE);
+                Files.write(Paths.get(problemFile + "_" + i), content.getBytes(), StandardOpenOption.CREATE);
 
                 logger.info("Elapsed time ==> " + stopwatch);
                 stopwatch.reset();
