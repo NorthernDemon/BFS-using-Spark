@@ -67,9 +67,9 @@ public final class BfsSpark {
                         // For each GRAY vertex, emit each of the edges as a new vertex (also GRAY)
                         Vertex vertex = new Vertex(source);
                         if (vertex.getColor() == Color.GRAY) {
-                            for (int v : vertex.getEdges()) {
-                                Vertex vVertex = new Vertex(v, vertex.getDistance() + 1, Color.GRAY);
-                                result.add(new Tuple2<>(vVertex.getId(), vVertex));
+                            for (int edge : vertex.getEdges()) {
+                                Vertex edgeVertex = new Vertex(edge, new HashSet<Integer>(), vertex.getDistance() + 1, Color.GRAY);
+                                result.add(new Tuple2<>(edgeVertex.getId(), edgeVertex));
                             }
                             // We're done with this vertex now, color it BLACK
                             vertex.setColor(Color.BLACK);
@@ -84,33 +84,17 @@ public final class BfsSpark {
 
                 JavaPairRDD<Integer, Vertex> reducer = mapper.reduceByKey(new Function2<Vertex, Vertex, Vertex>() {
                     public Vertex call(Vertex vertex1, Vertex vertex2) {
-                        Set<Integer> edges = new HashSet<>();
-                        int distance = Integer.MAX_VALUE;
-                        Color color = Color.WHITE;
+                        // Save the minimum distance
+                        int distance = vertex1.getDistance() < vertex2.getDistance() ? vertex1.getDistance() : vertex2.getDistance();
 
-                        for (Vertex vertex : Arrays.asList(vertex1, vertex2)) {
-                            // One (and only one) copy of the vertex will be the fully expanded
-                            // version, which includes the edges
-                            if (vertex.getEdges().size() > 0) {
-                                edges = vertex.getEdges();
-                            }
+                        // One (and only one) copy of the vertex will be the fully expanded
+                        // version, which includes the edges
+                        Set<Integer> edges = !vertex1.getEdges().isEmpty() ? vertex1.getEdges() : vertex2.getEdges();
 
-                            // Save the minimum distance
-                            if (vertex.getDistance() < distance) {
-                                distance = vertex.getDistance();
-                            }
+                        // Save the darkest color
+                        Color color = vertex1.getColor().ordinal() > vertex2.getColor().ordinal() ? vertex1.getColor() : vertex2.getColor();
 
-                            // Save the darkest color
-                            if (vertex.getColor().ordinal() > color.ordinal()) {
-                                color = vertex.getColor();
-                            }
-                        }
-
-                        Vertex vertex = new Vertex(vertex1.getId());
-                        vertex.setDistance(distance);
-                        vertex.setEdges(edges);
-                        vertex.setColor(color);
-                        return vertex;
+                        return new Vertex(vertex1.getId(), edges, distance, color);
                     }
                 });
 
@@ -142,9 +126,9 @@ public final class BfsSpark {
 
         int vertexCount = Integer.parseInt(lines.get(0));
         Map<Integer, Vertex> vertexes = new HashMap<>(vertexCount);
-        vertexes.put(1, new Vertex(1, Color.GRAY));
+        vertexes.put(1, new Vertex(1, new HashSet<Integer>(), 0, Color.GRAY));
         for (int i = 2; i <= vertexCount; i++) {
-            vertexes.put(i, new Vertex(i, Integer.MAX_VALUE, Color.WHITE));
+            vertexes.put(i, new Vertex(i, new HashSet<Integer>(), Integer.MAX_VALUE, Color.WHITE));
         }
 
         for (int i = 2; i < lines.size(); i++) {
