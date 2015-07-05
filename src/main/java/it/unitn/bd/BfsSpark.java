@@ -51,16 +51,16 @@ public final class BfsSpark {
         JavaSparkContext spark = new JavaSparkContext(new SparkConf().setAppName(APP_NAME).setMaster(master));
         spark.addJar("target/" + JAR + ".jar");
 
-        Stopwatch stopwatch = Stopwatch.createUnstarted();
         for (String problemFile : PROBLEM_FILES) {
             logger.info("Problem file: " + problemFile);
+            Stopwatch stopwatch = Stopwatch.createUnstarted();
 
             GraphFileUtil.convert(problemFile);
             int index = 0;
             boolean isGrayVertex = true;
             // Continue until there is at least one GRAY vertex
             while (isGrayVertex) {
-                JavaRDD<String> lines = spark.textFile(problemFile + "_" + index);
+                JavaRDD<String> lines = spark.textFile(problemFile + '_' + index);
 
                 index++;
                 stopwatch.start();
@@ -76,6 +76,7 @@ public final class BfsSpark {
                             for (int neighbour : vertex.getNeighbours()) {
                                 result.add(new Tuple2<>(neighbour, new Vertex(neighbour, new HashSet<Integer>(), vertex.getDistance() + 1, Color.GRAY)));
                             }
+
                             // Finished processing the current vertex
                             vertex.setColor(Color.BLACK);
                         }
@@ -103,12 +104,12 @@ public final class BfsSpark {
                     }
                 });
 
-                logger.info("Elapsed time ==> " + stopwatch);
-                stopwatch.reset();
+                stopwatch.stop();
+                logger.info("Elapsed time [" + index + "] ==> " + stopwatch);
 
                 // Save intermediate results into file for next iteration
                 String content = NEW_LINE.join(reducer.collectAsMap().values());
-                Files.write(Paths.get(problemFile + "_" + index), content.getBytes(), StandardOpenOption.CREATE);
+                Files.write(Paths.get(problemFile + '_' + index), content.getBytes(), StandardOpenOption.CREATE);
                 isGrayVertex = content.contains(Color.GRAY.name());
             }
         }

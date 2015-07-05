@@ -25,7 +25,7 @@ public final class Vertex implements Serializable {
 
     private static final String BAR_SEPARATOR = "|";
     private static final Splitter BAR = Splitter.on(BAR_SEPARATOR);
-    private static final Splitter COMMA = Splitter.on(",");
+    private static final Splitter COMMA = Splitter.on(",").trimResults();
 
     private final int id;
 
@@ -37,7 +37,7 @@ public final class Vertex implements Serializable {
 
     public Vertex(int id, Set<Integer> neighbours, int distance, Color color) {
         this.id = id;
-        this.neighbours = new HashSet<>(neighbours);
+        this.neighbours = neighbours;
         this.distance = distance;
         this.color = color;
     }
@@ -47,7 +47,7 @@ public final class Vertex implements Serializable {
         id = Integer.parseInt(tokens.get(0));
         neighbours = new HashSet<>(tokens.get(1).length());
         for (String vertex : COMMA.splitToList(tokens.get(1).substring(1, tokens.get(1).length() - 1))) {
-            neighbours.add(Integer.parseInt(vertex.trim()));
+            neighbours.add(Integer.parseInt(vertex));
         }
         distance = Integer.parseInt(tokens.get(2));
         color = Color.valueOf(tokens.get(3));

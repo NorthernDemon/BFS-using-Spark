@@ -18,7 +18,7 @@ public enum Color {
     WHITE,
 
     /**
-     * Vertexes, scheduled for processing
+     * Vertex is scheduled for processing
      * <p/>
      * BFS terminates if no GRAY vertexes present
      */

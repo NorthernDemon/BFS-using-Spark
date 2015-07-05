@@ -31,6 +31,7 @@ public abstract class ServiceConfiguration {
         try {
             Properties properties = new Properties();
             properties.load(new FileInputStream(CONFIGURATION_FILE));
+
             appName = properties.getProperty("app-name");
             ip = properties.getProperty("ip");
             port = Integer.parseInt(properties.getProperty("port"));

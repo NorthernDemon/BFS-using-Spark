@@ -18,15 +18,14 @@ public final class SequentialTest {
     private final static int SOURCE_VERTEX = 0;
 
     public static void main(String[] args) throws Exception {
-        logger.info("Sequential BFS is started...");
-        Stopwatch stopwatch = Stopwatch.createUnstarted();
+        logger.info("Sequential BFS has been started.");
         for (String problemFile : ServiceConfiguration.getProblemFiles()) {
             logger.info("Problem file: " + problemFile);
             Graph G = new Graph(new In(problemFile));
-            stopwatch.start();
+            Stopwatch stopwatch = Stopwatch.createStarted();
             BreadthFirstPaths bfs = new BreadthFirstPaths(G, SOURCE_VERTEX);
+            stopwatch.stop();
             logger.info("Elapsed time ==> " + stopwatch);
-            stopwatch.reset();
             for (int v = 0; v < G.V(); v++) {
                 if (bfs.hasPathTo(v)) {
                     logger.debug(SOURCE_VERTEX + " to " + v + " (distance " + bfs.distTo(v) + "): " + bfs.pathTo(v));
@@ -35,6 +34,6 @@ public final class SequentialTest {
                 }
             }
         }
-        logger.info("Sequential BFS is stopped.");
+        logger.info("Sequential BFS has been stopped.");
     }
 }
