@@ -26,11 +26,13 @@ public final class SequentialTest {
             BreadthFirstPaths bfs = new BreadthFirstPaths(G, SOURCE_VERTEX);
             stopwatch.stop();
             logger.info("Elapsed time ==> " + stopwatch);
-            for (int v = 0; v < G.V(); v++) {
-                if (bfs.hasPathTo(v)) {
-                    logger.debug(SOURCE_VERTEX + " to " + v + " (distance " + bfs.distTo(v) + "): " + bfs.pathTo(v));
-                } else {
-                    logger.debug(SOURCE_VERTEX + " to " + v + " (not connected)");
+            if (logger.isDebugEnabled()) {
+                for (int v = 0; v < G.V(); v++) {
+                    if (bfs.hasPathTo(v)) {
+                        logger.debug(SOURCE_VERTEX + " to " + v + " (distance " + bfs.distTo(v) + "): " + bfs.pathTo(v));
+                    } else {
+                        logger.debug(SOURCE_VERTEX + " to " + v + " (not connected)");
+                    }
                 }
             }
         }

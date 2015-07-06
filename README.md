@@ -13,7 +13,7 @@ TEXT
 
 Installation
 -------
-Requirements: *JDK 7*, *Maven*
+Requirements: *JDK 7*, *Maven*, *Spark*
 
 Configure service parameters in **service.properties** file.
 
@@ -23,7 +23,7 @@ Add the libraries from **sequential-libs** folder to your classpath.
 
 Follow the **Run with Spark** section to start the Spark cluster.
 
-Last step can be replaced with running the main class of it.unitn.bd.BfsSpark instead of jar-with-dependencies.
+Last step can be replaced with running the main class of *it.unitn.bd.BfsSpark* instead of jar-with-dependencies.
 
 ####Run with Spark
 

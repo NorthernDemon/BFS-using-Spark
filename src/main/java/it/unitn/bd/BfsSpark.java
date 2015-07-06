@@ -17,10 +17,7 @@ import scala.Tuple2;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * BFS with MapReduce on Spark
@@ -104,11 +101,12 @@ public final class BfsSpark {
                     }
                 });
 
+                Collection<Vertex> vertexes = reducer.collectAsMap().values();
                 stopwatch.stop();
                 logger.info("Elapsed time [" + index + "] ==> " + stopwatch);
 
-                // Save intermediate results into file for next iteration
-                String content = NEW_LINE.join(reducer.collectAsMap().values());
+                // Save intermediate results into a text file for the next iteration
+                String content = NEW_LINE.join(vertexes);
                 Files.write(Paths.get(problemFile + '_' + index), content.getBytes(), StandardOpenOption.CREATE);
                 isGrayVertex = content.contains(Color.GRAY.name());
             }
