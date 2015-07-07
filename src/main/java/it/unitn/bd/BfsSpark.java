@@ -101,12 +101,12 @@ public final class BfsSpark {
                     }
                 });
 
-                Collection<Vertex> vertexes = reducer.collectAsMap().values();
+                Collection<Vertex> vertices = reducer.collectAsMap().values();
                 stopwatch.stop();
                 logger.info("Elapsed time [" + index + "] ==> " + stopwatch);
 
                 // Save intermediate results into a text file for the next iteration
-                String content = NEW_LINE.join(vertexes);
+                String content = NEW_LINE.join(vertices);
                 Files.write(Paths.get(problemFile + '_' + index), content.getBytes(), StandardOpenOption.CREATE);
                 isGrayVertex = content.contains(Color.GRAY.name());
             }

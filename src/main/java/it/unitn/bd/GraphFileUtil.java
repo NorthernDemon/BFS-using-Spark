@@ -35,7 +35,7 @@ public abstract class GraphFileUtil {
      * First vertex with the lowest key will be colored GRAY with 0 distance,
      * thus indicating the starting point of single-source path
      * <p/>
-     * Other vertexes will be colored WHITE with positive infinity distance
+     * Other vertices will be colored WHITE with positive infinity distance
      * <p/>
      * Sample: 1|[2, 3, 4]|1234567890|GRAY|
      *
@@ -46,10 +46,10 @@ public abstract class GraphFileUtil {
         BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(new File(problemFile))));
 
         int vertexCount = Integer.parseInt(reader.readLine());
-        Map<Integer, Vertex> vertexes = new HashMap<>(vertexCount);
-        vertexes.put(1, new Vertex(1, new HashSet<Integer>(), 0, Color.GRAY));
+        Map<Integer, Vertex> vertices = new HashMap<>(vertexCount);
+        vertices.put(1, new Vertex(1, new HashSet<Integer>(), 0, Color.GRAY));
         for (int i = 2; i <= vertexCount; i++) {
-            vertexes.put(i, new Vertex(i, new HashSet<Integer>(), Integer.MAX_VALUE, Color.WHITE));
+            vertices.put(i, new Vertex(i, new HashSet<Integer>(), Integer.MAX_VALUE, Color.WHITE));
         }
 
         String line = reader.readLine(); // read number of edges
@@ -57,10 +57,10 @@ public abstract class GraphFileUtil {
             List<String> pair = SPACE.splitToList(line);
             int vertex1 = Integer.parseInt(pair.get(0)) + 1;
             int vertex2 = Integer.parseInt(pair.get(1)) + 1;
-            vertexes.get(vertex1).addNeighbour(vertex2);
-            vertexes.get(vertex2).addNeighbour(vertex1);
+            vertices.get(vertex1).addNeighbour(vertex2);
+            vertices.get(vertex2).addNeighbour(vertex1);
         }
 
-        Files.write(Paths.get(problemFile + "_0"), NEW_LINE.join(vertexes.values()).getBytes(), StandardOpenOption.CREATE);
+        Files.write(Paths.get(problemFile + "_0"), NEW_LINE.join(vertices.values()).getBytes(), StandardOpenOption.CREATE);
     }
 }

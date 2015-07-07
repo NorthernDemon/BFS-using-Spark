@@ -12,7 +12,7 @@ public enum Color {
     /**
      * Vertex has NOT been processed
      * <p/>
-     * Final output may have WHITE vertexes if graph is not strongly connected
+     * Final output may have WHITE vertices if graph is not strongly connected
      * (such vertex cannot be reached from the chosen source)
      */
     WHITE,
@@ -20,7 +20,7 @@ public enum Color {
     /**
      * Vertex is scheduled for processing
      * <p/>
-     * BFS terminates if no GRAY vertexes present
+     * BFS terminates if no GRAY vertices present
      */
     GRAY,
 
