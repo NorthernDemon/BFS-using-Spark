@@ -71,7 +71,9 @@ public final class BfsSpark {
                         if (vertex.getColor() == Color.GRAY) {
                             // Explore neighbours of a GRAY vertex and emit them as another GRAY
                             for (int neighbour : vertex.getNeighbours()) {
-                                result.add(new Tuple2<>(neighbour, new Vertex(neighbour, new HashSet<Integer>(), vertex.getDistance() + 1, Color.GRAY)));
+                                List<Integer> path = new LinkedList<>(vertex.getPath());
+                                path.add(neighbour);
+                                result.add(new Tuple2<>(neighbour, new Vertex(neighbour, new HashSet<Integer>(), path, vertex.getDistance() + 1, Color.GRAY)));
                             }
 
                             // Finished processing the current vertex
@@ -93,11 +95,14 @@ public final class BfsSpark {
                         // Chose the version with full list of all the neighbours (only the original)
                         Set<Integer> neighbours = !vertex1.getNeighbours().isEmpty() ? vertex1.getNeighbours() : vertex2.getNeighbours();
 
+                        // Chose the minimal path from the source to current vertex
+                        List<Integer> path = vertex1.getDistance() < vertex2.getDistance() ? vertex1.getPath() : vertex2.getPath();
+
                         // Chose the darkest color
                         Color color = vertex1.getColor().ordinal() > vertex2.getColor().ordinal() ? vertex1.getColor() : vertex2.getColor();
 
                         // Emit the processed vertex
-                        return new Vertex(vertex1.getId(), neighbours, distance, color);
+                        return new Vertex(vertex1.getId(), neighbours, path, distance, color);
                     }
                 });
 

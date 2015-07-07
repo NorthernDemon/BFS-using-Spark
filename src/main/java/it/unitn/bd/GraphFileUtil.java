@@ -9,10 +9,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Useful utils for Graph representation conversion
@@ -26,6 +23,11 @@ public abstract class GraphFileUtil {
     private static final Joiner NEW_LINE = Joiner.on("\n");
 
     /**
+     * Defines the starting point for BFS algorithm
+     */
+    private final static int SOURCE_VERTEX = 1;
+
+    /**
      * Converts a file from the "Algorithm" book from undirected graph
      * into appropriate bi-directed file structure for MapReduce process
      * <p/>
@@ -36,8 +38,6 @@ public abstract class GraphFileUtil {
      * thus indicating the starting point of single-source path
      * <p/>
      * Other vertices will be colored WHITE with positive infinity distance
-     * <p/>
-     * Sample: 1|[2, 3, 4]|1234567890|GRAY|
      *
      * @param problemFile of the Robert Sedgewick
      * @throws IOException if cannot write to file system
@@ -47,9 +47,11 @@ public abstract class GraphFileUtil {
 
         int vertexCount = Integer.parseInt(reader.readLine());
         Map<Integer, Vertex> vertices = new HashMap<>(vertexCount);
-        vertices.put(1, new Vertex(1, new HashSet<Integer>(), 0, Color.GRAY));
+        LinkedList<Integer> path = new LinkedList<>();
+        path.add(SOURCE_VERTEX);
+        vertices.put(SOURCE_VERTEX, new Vertex(SOURCE_VERTEX, new HashSet<Integer>(), path, 0, Color.GRAY));
         for (int i = 2; i <= vertexCount; i++) {
-            vertices.put(i, new Vertex(i, new HashSet<Integer>(), Integer.MAX_VALUE, Color.WHITE));
+            vertices.put(i, new Vertex(i, new HashSet<Integer>(), path, Integer.MAX_VALUE, Color.WHITE));
         }
 
         String line = reader.readLine(); // read number of edges
