@@ -66,7 +66,7 @@ public final class BfsSpark {
                     @Override
                     public Iterable<Tuple2<Integer, Vertex>> call(String source) throws Exception {
                         Vertex vertex = new Vertex(source);
-                        List<Tuple2<Integer, Vertex>> result = new ArrayList<>();
+                        Set<Tuple2<Integer, Vertex>> result = new HashSet<>();
 
                         // Emit neighbours of a GRAY vertex
                         if (vertex.getColor() == Color.GRAY) {
