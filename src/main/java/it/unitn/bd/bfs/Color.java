@@ -3,7 +3,7 @@ package it.unitn.bd.bfs;
 /**
  * Defines vertex color of different state in parallel processing
  * <p/>
- * DO NOT RE-ORDER !
+ * NOTE: DO NOT RE-ORDER !
  *
  * @see Vertex
  */

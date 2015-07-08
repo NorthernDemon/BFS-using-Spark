@@ -38,6 +38,8 @@ public abstract class GraphFileUtil {
      * thus indicating the starting point of single-source path
      * <p/>
      * Other vertices will be colored WHITE with positive infinity distance
+     * <p/>
+     * Vertex numeration starts from 1
      *
      * @param problemFile of the Robert Sedgewick
      * @throws IOException if cannot write to file system
@@ -47,14 +49,16 @@ public abstract class GraphFileUtil {
 
         int vertexCount = Integer.parseInt(reader.readLine());
         Map<Integer, Vertex> vertices = new HashMap<>(vertexCount);
-        LinkedList<Integer> path = new LinkedList<>();
-        path.add(SOURCE_VERTEX);
+        LinkedList<Integer> path = new LinkedList<Integer>() {{
+            add(SOURCE_VERTEX);
+        }};
         vertices.put(SOURCE_VERTEX, new Vertex(SOURCE_VERTEX, new HashSet<Integer>(), path, 0, Color.GRAY));
         for (int i = 2; i <= vertexCount; i++) {
             vertices.put(i, new Vertex(i, new HashSet<Integer>(), path, Integer.MAX_VALUE, Color.WHITE));
         }
 
-        String line = reader.readLine(); // read number of edges
+        @SuppressWarnings("UnusedAssignment")
+        String line = reader.readLine(); // number of edges [unused]
         while ((line = reader.readLine()) != null) {
             List<String> pair = SPACE.splitToList(line);
             int vertex1 = Integer.parseInt(pair.get(0)) + 1;

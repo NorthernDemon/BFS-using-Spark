@@ -6,9 +6,7 @@ import java.io.Serializable;
 import java.util.*;
 
 /**
- * Vertex used for MapReduce processing and passing from map to reduce functions
- * <p/>
- * Also can be stored in the text format for intermediate iterations:
+ * Vertex is used for MapReduce Graph processing and storing intermediate results in format:
  * <p/>
  * | ID |  Neighbours  |    Path   | Distance | Color |
  * -----------------------------------------------------
@@ -25,7 +23,7 @@ public final class Vertex implements Serializable {
 
     private static final String BAR_SEPARATOR = "|";
     private static final Splitter BAR = Splitter.on(BAR_SEPARATOR);
-    private static final Splitter COMMA = Splitter.on(",").trimResults();
+    private static final Splitter COMMA = Splitter.on(",").trimResults().omitEmptyStrings();
 
     private final int id;
 
@@ -46,20 +44,18 @@ public final class Vertex implements Serializable {
     }
 
     public Vertex(String source) {
-        List<String> tokens = BAR.splitToList(source);
-        id = Integer.parseInt(tokens.get(0));
-        String neighboursSection = tokens.get(1);
-        neighbours = new HashSet<>(neighboursSection.length());
-        for (String vertex : COMMA.splitToList(neighboursSection.substring(1, neighboursSection.length() - 1))) {
+        Iterator<String> tokens = BAR.splitToList(source).iterator();
+        id = Integer.parseInt(tokens.next());
+        neighbours = new HashSet<>();
+        for (String vertex : COMMA.splitToList(tokens.next().replace("[", "").replace("]", ""))) {
             neighbours.add(Integer.parseInt(vertex));
         }
         path = new LinkedList<>();
-        String pathSection = tokens.get(2);
-        for (String vertex : COMMA.splitToList(pathSection.substring(1, pathSection.length() - 1))) {
+        for (String vertex : COMMA.splitToList(tokens.next().replace("[", "").replace("]", ""))) {
             path.add(Integer.parseInt(vertex));
         }
-        distance = Integer.parseInt(tokens.get(3));
-        color = Color.valueOf(tokens.get(4));
+        distance = Integer.parseInt(tokens.next());
+        color = Color.valueOf(tokens.next());
     }
 
     public int getId() {
