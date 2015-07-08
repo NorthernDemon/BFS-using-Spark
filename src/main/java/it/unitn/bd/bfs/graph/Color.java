@@ -1,4 +1,4 @@
-package it.unitn.bd.bfs;
+package it.unitn.bd.bfs.graph;
 
 /**
  * Defines vertex color of different state in parallel processing

@@ -25,7 +25,7 @@ Start the master node using the following command
 Start the slave nodes using the following command
 > spark-class org.apache.spark.deploy.worker.Worker spark://{masterIp}:7077
 
-Run the main method of a **it.unitn.bd.BfsSpark** class
+Run the main method of a **it.unitn.bd.bfs.BfsSpark** class
 
 ####Run with Spark
 

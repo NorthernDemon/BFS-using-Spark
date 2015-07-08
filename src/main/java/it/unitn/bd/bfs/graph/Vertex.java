@@ -1,4 +1,4 @@
-package it.unitn.bd.bfs;
+package it.unitn.bd.bfs.graph;
 
 import com.google.common.base.Splitter;
 

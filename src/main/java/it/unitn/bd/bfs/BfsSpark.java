@@ -1,9 +1,10 @@
-package it.unitn.bd;
+package it.unitn.bd.bfs;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Stopwatch;
-import it.unitn.bd.bfs.Color;
-import it.unitn.bd.bfs.Vertex;
+import it.unitn.bd.ServiceConfiguration;
+import it.unitn.bd.bfs.graph.Color;
+import it.unitn.bd.bfs.graph.Vertex;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.spark.SparkConf;

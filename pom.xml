@@ -76,7 +76,7 @@
                             </descriptorRefs>
                             <archive>
                                 <manifest>
-                                    <mainClass>it.unitn.bd.BfsSpark</mainClass>
+                                    <mainClass>it.unitn.bd.bfs.BfsSpark</mainClass>
                                 </manifest>
                             </archive>
                         </configuration>
