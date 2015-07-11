@@ -1,4 +1,4 @@
-*.csv
-*.idea
 *.iml
+*.idea
 target
+test-sets/*_[0-9]*
