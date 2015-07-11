@@ -6,6 +6,11 @@ Acknowledgment
 
 Sequential version of the BFS algorithm and data sets are taken from the book [Algorithms, 4th Edition by Robert Sedgewick and Kevin Wayne](http://algs4.cs.princeton.edu/home/)
 
+Introduction
+-------
+
+Parallel Breadth-first search algorithm for undirected Graph processing using MapReduce (Apache Spark, Java)
+
 Installation
 -------
 Requirements: *JDK 7*, *Maven*, *Spark*

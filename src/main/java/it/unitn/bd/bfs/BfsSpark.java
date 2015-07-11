@@ -24,6 +24,7 @@ import java.util.*;
  * Parallel BFS test with MapReduce on Spark
  * <p/>
  * NOTE: Remember to configure the environment in "service.properties" !
+ * NOTE: If running from IDE, remember to remove intermediate results fro under the "test-sets/" folder
  *
  * @see ServiceConfiguration
  */
@@ -61,7 +62,7 @@ public final class BfsSpark {
                 JavaRDD<String> lines = spark.textFile(problemFile + '_' + index++);
                 stopwatch.start();
 
-                // Split vertices by their id and all the neighbours it is connected to
+                // Recover vertices from text file and emit all of them plus emit the GRAY neighbours as new modified vertices
                 JavaPairRDD<Integer, Vertex> mapper = lines.flatMapToPair(new PairFlatMapFunction<String, Integer, Vertex>() {
                     @Override
                     public Iterable<Tuple2<Integer, Vertex>> call(String source) throws Exception {

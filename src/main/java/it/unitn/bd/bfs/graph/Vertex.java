@@ -43,6 +43,11 @@ public final class Vertex implements Serializable {
         this.color = color;
     }
 
+    /**
+     * Construct vertex from a source string (provided by the same class in toString() method)
+     *
+     * @param source vertex string
+     */
     public Vertex(String source) {
         Iterator<String> tokens = BAR.splitToList(source).iterator();
         id = Integer.parseInt(tokens.next());
@@ -109,6 +114,11 @@ public final class Vertex implements Serializable {
         return Objects.hash(id, neighbours, path, distance, color);
     }
 
+    /**
+     * Provides the source to regenerate a vertex from
+     *
+     * @return vertex string
+     */
     @Override
     public String toString() {
         return id + BAR_SEPARATOR + neighbours + BAR_SEPARATOR + path + BAR_SEPARATOR + distance + BAR_SEPARATOR + color;
