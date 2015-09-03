@@ -1,4 +1,4 @@
-Breadth-first search with MapReduce
+Breadth-first search using Spark
 ==============
 
 Acknowledgment
@@ -9,7 +9,7 @@ Sequential version of the BFS algorithm and data sets are taken from the book [A
 Introduction
 -------
 
-Parallel Breadth-first search algorithm for undirected Graph processing using MapReduce (Apache Spark, Java)
+Parallel Breadth-first search algorithm for undirected Graph processing using Spark
 
 Installation
 -------

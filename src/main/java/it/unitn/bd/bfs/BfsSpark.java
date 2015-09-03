@@ -21,7 +21,7 @@ import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 /**
- * Parallel BFS test with MapReduce on Spark
+ * Parallel BFS test using Spark
  * <p/>
  * NOTE: Remember to configure the environment in "service.properties" !
  * NOTE: If running from IDE, remember to remove intermediate results fro under the "test-sets/" folder
